@@ -1,0 +1,20 @@
+CS:APP3e Practice Problem 2.46, pp.111-112:
+-------------------------------------------
+
+
+A. The binary representation of 0.1 - x is:
+
+0.00000000000000000000000110011[0011] where the bracketed sequence is repeated indefinetely.
+
+B. The approximate decimal value of 0.1 - x is:
+
+0.000000095367431640625 or 9.5367431640625 * 10^-8
+
+C. The total time in seconds for 100 hours is 100 * 60 * 60 = 360,000 seconds.
+This means there are 3,600,000 increments of 0.1 seconds. The error (in decimal) for every 0.1 seconds was computed in part B. This error will be multiplied by 3,600,000 giving:
+
+0.34332275390625 seconds
+
+D. It will be off by 2,000 * 0.34332275390625 which is:
+
+686.6455 meters

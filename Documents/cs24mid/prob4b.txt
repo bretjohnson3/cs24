@@ -1,0 +1,16 @@
+Explicit Allocator Scenario:  Allocation Fails under Best-Fit but not First-Fit
+===============================================================================
+Total Heap size is 16 KB:
+
+    1. Allocate a block of size 6 KB
+    2. Allocate a block of size 8 KB
+    3. Free block from instruction 1.
+    4. Allocate block of size 1 KB.
+    5. Free block from instruction 2.
+    6. Attempt to allocate block of size 15 KB -->> results in allocation failure!
+
+Final Memory Layout:
+
+Free block of size 14 KB -> Allocated block of size 1 KB -> Free block of size 1 KB
+
+

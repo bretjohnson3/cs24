@@ -1,0 +1,84 @@
+Locking Primitives
+==================
+
+1a.  Benefit of spinlocks over normal locks
+
+A spin lock would be useful in a situation where threads are not computing
+intesnsive. This is the case since, threads will not require the processor
+a very long time. This means that the active waiting will not be wasted 
+and will more often lead to aquiring the lock. These cases also avoid trapping
+into the kernel and context switches which are expensive.
+
+
+1b.  Spinlocks on 1-processor systems
+
+It makes little sense to have a spinlock on a system with a single processor
+and it would not provide any benefit to have one. In this case, there will be
+threads that are actively waiting though they will never aquire the lock until
+a different thread yields or is blocked. 
+
+
+2a.  Read/write lock fairness issues
+
+If there is a situation where there are many readers that receive the lock
+before a writer, the writer will not receive the lock until all of the readers
+have finished. For example, say we have the following series of requesters:
+
+              W1, R1, W2, R2, R3, R4, R5, W3, R6, R7, R8, R9, R10
+
+In this situation, W1 would receive the lock. When R1 receives the lock,
+R2, R3, R4....R10 will also receive the lock. W2 will not receive the lock 
+until all of the readers have released the lock. If more read requests occur 
+before W2 receives the lock, they will also get it the lock before W2. The 
+current system gives precedence to readers making it unfair. 
+
+In general, any situation where more read requests arise while some reader 
+holds the lock will be a situation that is unfair.
+
+
+2b.  Fair read/write lock design
+
+In the new read/write lock design, we have the following rules:
+
+If a reader, R1 holds the lock:
+
+    - if no one holds the lock, grant it immediately
+    - if another some number of readers hold the lock, grant access to R1 if
+      and only if there are no writers that requested the lock before R1
+    - if a writer holds the lock, R1 is blocked until the writer releases the
+      lock
+
+
+If a writer, W1 attempts to aquire the read/write lock:
+
+    - if no one holds the lock, grant it immediately
+    - if a lock is currently held by some number of readers, block W1 until no
+      more readers hold the lock
+    - if another writer (W2) holds the lock, block W1 until W2 has released
+      the lock
+
+This creates a situation in which threads are always granted access in the 
+order they  initially tried to acquire the lock but the functionality of 
+multiple readers holding the lock at the same time is mostly preserved.
+
+Looking at the example from before of:
+
+            W1, R1, W2, R2, R3, R4, R5, W3, R6, R7, R8, R9, 
+
+We would give the lock to W1. Now when it is released, R1 and only R1 will get
+the lock. R2, R3, R4 and R5 will not get the lock since there is a blocked 
+writer ahead of them. When it is released, W2 will get it. When W2 releases the
+lock, all of R2, R3, R4 and R5 will get the lock. Once all of them have 
+released the lock, W3 will get the lock. Once it has released the lock, all of
+R6, R7, R8, and R9 will get the lock.
+
+The blocked threads could easily be managed in a queue. Popping off the queue 
+signifies granting it the lock. If the lock is available, threads are popped 
+until a writer resides at the top of the queue. Other popping rules should be
+obvious given the rules above and are not explained to be concise as possible.
+
+
+
+
+
+

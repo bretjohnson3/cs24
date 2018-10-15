@@ -1,0 +1,12 @@
+In the programs output, we should see Fibonacci numbers coming from both
+producers. However, they are only coming from producer 1.
+
+The problem is with how the producers add elements to the buffer. The code
+is such that the producer will add elements until the buffer is full then
+it will yield. The order of the calls forces the first producer to fill the
+buffer then yield. The second producer then does nothing since the buffer
+is still full. Then the consumer comes in and clears the buffer. The process
+is then repeated so that the second producer never produces fib numbers.
+
+Cooperative thread execution is not fair in this scenario since the second
+consumer never gets a chance at execution for the reasons stated above.

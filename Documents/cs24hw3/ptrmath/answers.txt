@@ -1,0 +1,22 @@
+Answers for the "Arrays, Pointer Arithmetic, and Structs" section of CS24 HW3:
+
+Part 1)
+
+The ending value of the bytes is:
+
+0 0 0 EF BE AD DE 0 0 0 0 0 BE BA FE CA
+
+
+Part 2)
+
+The size of the id integer is 4 bytes. The offset is 0.
+The size of the code is 5 bytes. The offset is 8 bytes.
+The size of the next pointer is 8 bytes. The offset is 16 bytes.
+
+The total size of the struct is 24 bytes with 7 bytes being "unused" as padding.
+
+
+
+Part 3)
+
+if 'offset' == 107, then the two lines of code will write to the same byte.

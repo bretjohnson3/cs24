@@ -1,0 +1,21 @@
+Expression:  n = n & (n - 1)
+----------------------------
+Part 1:
+This expression toggles the rightmost one-bit of the binary representation of n
+to a zero. All the zeros which appear before the right one-bit (if there are
+any) are changed into ones.
+
+Part 2:
+It does this by first subtraction one from n. In the binary representation of n,
+this will change the rightmost one into a zero and then the ones will carry
+into all the leading zeros before it. It does nothing to the binary representation
+of the number beyond the rightmost one bit. This result is then compared to n
+using the & bitwise comparison. This changes all the bits from and including
+the rightmost one-bit into zeros.
+
+Part 3:
+Every time we do this operation while n is not zero, we are counting a one-bit.
+Thus, if we continually do this operation until n equals zero, we count all the
+one-bits. This is faster since we only do the operation for every one-bit in the
+binary representation. In the shifting method, we do the operations for every bit
+in the binary representation of n.

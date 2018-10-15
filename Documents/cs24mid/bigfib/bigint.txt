@@ -1,0 +1,77 @@
+------------------------------------------------------------------------------
+1)  Pseudocode for __add_bigint
+
+
+Initial Pseudocode:
+
+int __add_bigint(uint64_t *a, uint64_t *b, uint8_t size)
+if size == 0
+    return 1
+c = 0
+for i < size:
+    b[i] += a[i] + c
+    c = 0
+    check if carry
+        if carry:
+            c = 1
+
+if b[size - 1] + a[size - 1] + c causes carry
+    return 0
+
+return 1
+
+
+Pseudocode in go-to syntax with updates for x86-64 implementation:
+
+set_up:
+    test if size == 0
+        goto size_jump
+    clear carry flag
+    size = loop_var
+
+add_loop:
+    adc b, a
+    make a and b point to next value
+    loop_var--
+    check if loop_var != 0
+        goto add_loop
+
+check_overflow:
+    check if carry flag set
+        go_to overflow
+    ret 1
+
+overflow:
+    ret 0
+
+size_jump:
+    ret 1
+
+------------------------------------------------------------------------------
+3)  Largest n for fib(n) using four 64-bit quadwords for bigint:
+
+I ran the code with the verbose option to find the answer to this. To be exact,
+I ran ./bigfib 400 4 -v. The largest fib it gave me was fib(370). The output
+is below.
+
+fib(369) = 58,472,848,379,039,952,684,853,851,736,901,133,239,741,266,891.....
+fib(370) = 94,611,056,096,305,838,013,295,371,573,764,256,526,437,182,762.....
+Overflow detected!
+Aborted (core dumped)
+
+
+------------------------------------------------------------------------------
+4)  Number of 64-bit quadwords required for fib(2000), and value of fib(2000):
+
+The code aborts with 21 quadwords but gives a value for fib(2000) with 22
+quadwords. Therefore, the minimum number of quadwords is 22. The output for
+fib(2000) is below.
+
+fib(2000) = 4,224,696,333,392,304,878,706,725,602,341,482,782,579,852,840,250,
+681,098,010,280,137,314,308,584,370,130,707,224,123,599,639,141,511,088,446,
+087,538,909,603,607,640,194,711,643,596,029,271,983,312,598,737,326,253,555,
+802,606,991,585,915,229,492,453,904,998,722,256,795,316,982,874,482,472,992,
+263,901,833,716,778,060,607,011,615,497,886,719,879,858,311,468,870,876,264,
+597,369,086,722,884,023,654,422,295,243,347,964,480,139,515,349,562,972,087,
+652,656,069,529,806,499,841,977,448,720,155,612,802,665,404,554,171,717,881,
+930,324,025,204,312,082,516,817,125

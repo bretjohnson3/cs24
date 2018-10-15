@@ -1,0 +1,24 @@
+Bugs in rl_decode() function:
+-----------------------------
+Bug 1:
+The malloc call alters the states of multiple registers. To recover the values
+from these registers we must push them before the malloc call and pop them
+after the malloc call. Namely, RSI and RDX were pushed and popped.
+
+
+Bug 2:
+Before, we were incrementing by 1. Since the encoded is in the form:
+"#character#character" then we need to increment by two instead so that we
+only read in the counts not the characters.
+
+Bug 3:
+We need to add this line so that we increment the value in r10. This value
+previously wasn't moving, so we were writing in the same spot every time.
+Now it increments so that we move along as we write.
+
+
+Bug 4:
+bl is one byte register so there is high likelihood of overflow. We manage this
+in order to fix the bug. We see if an overflow occurs and if it does then we
+add 256 to ebx so account for the overflow. We add another instruction and jump
+in order to do this.

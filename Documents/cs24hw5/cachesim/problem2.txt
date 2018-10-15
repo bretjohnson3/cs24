@@ -1,0 +1,51 @@
+Part d)
+
+    In the directory I ran:
+
+    ./heaptest 32:256:1
+
+    This command denotes a direct-mapped cache since there is only one cache
+    line per set.
+
+    The program gave:
+
+    * Cache reads=387851976 writes=156711356 hits=531488886 misses=13074446
+       miss-rate=2.40% random replacement policy
+
+
+Part e)
+
+    In the directory I ran:
+
+    ./heaptest 32:1:256
+
+    This command denotes a fully associative cache since there is only one
+    cache set.
+
+    The program gave:
+
+    Memory-Access Statistics:
+
+     * Cache reads=387851976 writes=156711356 hits=531217776 misses=13345556
+       miss-rate=2.45% random replacement policy
+     * Memory reads=427057792 writes=345422560
+
+Part g)
+
+    In the directory I ran:
+
+    ./heaptest 32:256:1
+
+    The program gave:
+
+    Memory-Access Statistics:
+
+    * Cache reads=387851976 writes=156711356 hits=531488886 misses=13074446
+    miss-rate=2.40% LRU replacement policy
+    * Memory reads=418382272 writes=334897760
+
+    In the directory I ran:
+
+    ./heaptest 32:1:256
+
+    The program gave:

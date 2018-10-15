@@ -1,0 +1,8 @@
+0009 #dividend
+0010 #divisor
+80000000 #and-mask
+FFFF #these three are nothing
+FFFF
+FFFF
+0000 #quotient and remainder initialized to 0
+0000

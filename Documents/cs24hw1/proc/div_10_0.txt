@@ -1,0 +1,7 @@
+If the input is 10 divided by 0, the program will experience an infinite
+loop. In this scenario, the statement which is (remainder = remainder - divisor)
+will have no effect since the divisor is zero. Therefore, the remainder will
+always be positive. Since the remainder will always be positive, the exit
+conditions for the loop will never be met i.e. an inf loop. In our case,
+the program will terminate after certain amount of time saying that the max
+time was reached.

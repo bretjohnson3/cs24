@@ -1,0 +1,11 @@
+We have %r8 containing a properly initialized Shape subclass and we want
+to invoke the virtual function of getVolume on it. Here is the assembly code
+for this procedure:
+
+        movq (%r8), %rdi    #moves object address to rdi
+        
+        movq (%rdi), %r9    # moves class address to r9
+
+        movq (%r9), %r10    # moves function address to r10
+
+        call *%r10          # call r10 on dereferenced object

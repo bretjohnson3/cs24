@@ -1,0 +1,18 @@
+What does the assembly code do?
+-------------------------------
+
+First, the assembly code retrieves quadword M[16 + %rbp] into %rax.
+
+Next, it multiples this value by 3. 
+
+It then adds 12 to this value.
+
+It then multiplies this value by the original value.
+
+Lastly, it subtracts 17 from this value.
+
+
+So, if we call the input x, the code does: 
+
+(3x + 12)x - 17
+

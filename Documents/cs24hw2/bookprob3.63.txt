@@ -1,0 +1,47 @@
+Answer to Problem 3.63, CS:APP3e pp.314-315
+-------------------------------------------
+
+long switch_prob(long x, long n) {
+long result = x;
+switch(n) {
+
+/* The beginning machine code instructions subtract 60 from n, we the cases are
+offset by 60, giving us cases 60-65 and a default case if n does not fall
+in this range */
+
+/* the jump table had these going to the same location so they are combined
+into one instruction */
+case 60:
+case 62:
+  result = result * 8;
+  break;
+
+/* jump table for this case takes us here */
+case 63:
+  result = result >> 3;
+  break;
+
+/* the jump table for case four takes us here. There is no return statement
+before the next jump table location so there is a fall through afterwards */
+
+case 64:
+  result = result << 4;
+  result = result - x;
+
+  /* fall through */
+
+/* you can get here from the jump table or from falling thru */
+
+case 65:
+  result = result * result;
+
+  /* fall through */
+
+/* default case can be reached by fall through or a number that does not fall
+  in the right range */
+
+default:
+  result = 75 + result;
+  }
+  return result;
+}

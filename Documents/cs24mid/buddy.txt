@@ -1,0 +1,197 @@
+Buddy Allocator
+===============
+
+Put your answers for the buddy-allocator problem in this file.  You must keep
+lines to 80 characters or less, with the exception of the block pictures, which
+go slightly beyond the 80-character limit.
+
+For part d, you can describe the heap state as follows:
+
+Initial:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |                                                                               |
+  |                                                                               |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+Step i:  [alloc/free stuff]
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |                                                                               |
+  |                                                                               |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+Indicate boundaries between blocks with "|" characters.  Since the
+problem specifies a 16KiB heap, each "+----+" section represents 1KiB.
+
+At the start of each allocated or free block in the heap, put the
+following values:
+
+ * On the first line, put "O? _" where ? is the order of the block, and
+   "_" indicates a free block, or A/B/C/D/E indicates the name of the
+   allocated block.
+
+ * On the second line, put the size of the block:  for a free block, you
+   can put "??KB", where this is the size of the free block.  For a used
+   block, put "????", indicating the number of bytes in the used block.
+
+For example, after a 6000 byte allocation, you might have this:
+
+Step 1:  A = alloc(6000);
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |O8 A                                   |O8 _                                   |
+  |6000                                   |8KB                                    |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+
+
+==== PUT YOUR ANSWERS BELOW THIS LINE (which is 80 chars long) =================
+
+a)  Maximum size order of 2GiB heap
+
+The maximum order for this given heap is 26. The size of the free-list
+array will be 27 (indices 0 to 26).
+
+
+b)  Implementation of get_order_of_size()
+
+int get_order_of_size(int size)
+{
+    int order = 0;
+    while (size > MIN_BLOCK_SIZE)
+    {
+        size = size >> 1;
+        order ++;
+    }
+    return order;
+}
+
+
+c)  Detecting failed allocation requests
+
+First, we would check that the allocation request is not bigger than our heap
+size. We would do this likely by finding the order of our heap size and the
+order of the block using the get_order_of_size on both. If the allocation size
+is larger than the heap size, return NULL, else continue.
+
+Next, we find the order of the desired block by running get_order_of_size() on
+it to get the minimum order of our block. With this result, we check our free
+list at the index of our order. If it is non-zero, then there is a suitable
+block. If not, we check every index of the free list after this. If they are
+all zero, then we must return NULL.
+
+
+d)  Sequence of allocations and deallocations for 16KiB heap
+
+Initial:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |09_                                                                            |
+  |16KiB                                                                          |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+Step 1:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |06 A     |06_      |07_                |08_                                    |
+  |1400     |2KiB     |4KiB               |8KiB                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+Step 2:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |06 A     |06_      |07_                |08 B                                   |
+  |1400     |2KiB     |4KiB               |5500                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+Step 3:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |06 A     |05 C|05_ |07_                |08 B                                   |
+  |1400     |800 |1KiB|4KiB               |5500                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+Step 4:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |06 A     |05 C|05_ |07 D               |08 B                                   |
+  |1400     |800 |1KiB|3200               |5500                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+At this point, there is 1KiB actually available to satisfy allocation requests.
+There are 648 + 224 + 896 + 2692 = 4460 available bytes not available to
+satisfy allocation requests.
+
+
+Step 5:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |06 _     |05 C|05_ |07 D               |08 B                                   |
+  |2KiB     |800 |1KiB|3200               |5500                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+Step 6:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |05 E|05 _|05 C|05_ |07 D               |08 B                                   |
+  |700 |1KiB|800 |1KiB|3200               |5500                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+Step 7:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |05 E|05 _|05 C|05_ |07 D               |08 _                                   |
+  |700 |1KiB|800 |1KiB|3200               |8KiB                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+Step 8:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |05 E|05 _|06 _     |07 D               |08 _                                   |
+  |700 |1KiB|2KiB     |3200               |8KiB                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+Step 9:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |07 _               |07 D               |08 _                                   |
+  |4KiB               |3200               |8KiB                                   |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+Step 10:
+
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+  |09 _                                                                           |
+  |16KiB                                                                          |
+  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+
+e)  Limitation of buddy allocators
+
+An allocation is often significantly smaller than the size of the block it is
+allocated in. This is because the blocks double in size each time. Since this
+is the case, there is a possibility of up to half the block being not allocated
+but also not available to use.
+
+f)  Placement strategy of buddy allocators
+
+The closest strategy it uses is best fit. I say this because it allocates the
+memory to the block that is the smallest order that is big enough to satisfy
+the allocation size, just as best fit does.
+
+g)  Deferred coalescing
+
+If you're in a situation where you are going to free a block and then replace
+it with a block of the same size or similarly sized block, deferred
+coalescing will be better. This way you don't coalesce and then immediately
+undo the coalescing by redividing the block. In this way, you save machine work
+and time from deferred coalescing.

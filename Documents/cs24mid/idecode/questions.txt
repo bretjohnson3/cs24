@@ -1,0 +1,24 @@
+Instruction Decoding:  Questions
+================================
+
+1)  Offsets of MUL_LOOP, SKIP_ADD, MUL_DONE
+
+Before MUL_LOOP, there are 2, two-byte instructions and a single one-byte
+instruction. Thus, the offset of MUL_LOOP is 5 bytes = 40 bits.
+
+MUL_LOOP has 3, two-byte instructions and a single one-byte instruction.
+Thus, the offset of SKIP_ADD is 5 + 7 bytes = 96 bits
+
+SKIP_ADD has 3, one-byte instructions.
+Thus, the offset of MUL_DONE is 5 + 7 + 3 bytes = 120 bits.
+
+2)  Assembly instructions and encoded bit-patterns
+
+
+R5 = R5 - 6
+
+1010  0101  0000 0110
+
+R4 = R4 ^ R1
+
+1110 1100  xxxx 0001

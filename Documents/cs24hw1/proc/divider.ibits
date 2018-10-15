@@ -1,0 +1,17 @@
+023F # R7<-R7+R0 --  add dividend to remainder (which was initialized to 0)
+
+0BCF # R7<-R7-R1 --  remainder = remainder - divisor
+
+22BB # R3<-R2&R7 --  & the remainder with the bitmask
+
+0E9C # R4<-R2^R3 --  XOR with bitmask (result is zero if r is negative)
+
+28C7 # BNZ R3 7  -- Branch to second to last instruction if r is negative
+
+1786 # R6<-R6++  -- Increment the quotient
+
+2901 # BNZ R4 1  -- Loop again if remainder >= 0
+
+03CF # R7<-R7+R1 -- Remainder = remainder + divisor
+
+3C00 # done

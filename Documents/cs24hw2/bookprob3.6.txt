@@ -1,0 +1,10 @@
+Answers to Practice Problem 3.6, CS:APP3e pp.192-193
+----------------------------------------------------
+
+1. leaq 6(%rax), %rdx ----------> 6 + x
+
+2. leaq (%rax, %rcx), %rdx -----> x * y
+
+3. leaq (%rax, %rcx, 4), %rdx---> x + (4*y)
+
+4. leaq 7(%rax, %rax, 8), %rdx--> 7 + x + (x * 8)

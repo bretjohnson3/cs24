@@ -1,0 +1,105 @@
+Buddhabrot Renderer
+===================
+
+1.  Size of `points` array
+
+The size of the array is sizeof(complex_t) * max_iters. In this case, the size
+will be 8 * 2000 = 16,000 bytes. Yes, it will fit into all of the processor caches.
+
+2.  Memory reference pattern of `points` array
+
+The points array is used in the function call compute_bbrot_point. In the 
+function, points is accessed with a stride of one which means there is good
+spatial locality for that part of the program. The points array is also 
+called in the record_point_list function by compute_bbrot_point where there
+is an access stride of 1 which is good spatial locality. Since the entire data
+structure can fit into the processor cache, the program has good temporal 
+locality. This is because it iterate through the entire array on two separate
+occassions. Since the whole array can be stored in the cache, this is good.
+
+The reads that take place from points are all done quickly since the entire
+memory block fits within the processor cache.
+
+
+
+3.  Hardware caches and `points` array
+
+Accesses will happen at L1 speeds. The "points" array can fit entirely into
+the L1 cache. When the cpu reads from the array, the entire array can fit into
+the hardware cache. This way, later accesses can be from the L1 cache resulting
+in L1 speeds.
+
+
+
+4.  Size of `array` image-data
+
+The array is size bbrot_size * bbrot_size * sizeof(uint32_t). This is the same
+as 2048 * 2048 * 32 = 16,777,216. This will not fit into any of the processor
+caches. It is too large.
+
+
+5.  Memory reference pattern of `array` image-data
+
+Accesses and writes to array are very random in terms of their stride. Each 
+access depends on the real and imaginary part of c. Each c is created randomly.
+Each subsequent access and write to 'array' is randome and independent of the 
+previous accesses. This causes for very poor spatial locality. 
+
+Should discuss temporal locality, reads, and writes.
+
+6.  Hardware caches and `array` image-data
+
+First, we note that the array does not completely fit into any of the hardware
+caches. This on its own makes it very unlikely that the program will benefit 
+from either of L1 or L2 caches. This is especially the case due to the poor 
+program locality.  Further, there will be many cache loads and evictions due to poor 
+locality. The L3 data cache is about half the size of the total array so it 
+makes sense that this will contribute to speed even though the accesses aren't
+always very close in memory. With all this in mind, it seems that the accesses
+will operate between L3 and main Memory access speeds.
+
+
+
+7.  Multithreading and hardware caches
+
+As we introduce multithreading, there are problems that can occur with the 
+cache. There would be false sharing that could occur among threads. For 
+example, if one thread has a certain portion of the data loaded into its cache
+the another thread wouldn't be able to alter that data quickly. This is an 
+example of false sharing that would arise. As the number of threads increases,
+(i.e. as N gets larger) this problem would get worse and worse since there are
+more possibilities of threads needing or trying to write to the same data 
+concurrently. If the image is much larger the false sharing problem would 
+improve. This is due to simple probability; if there is more total data, it is
+less likely that two threads will be loading the same data at one time.
+
+
+8.  Improvements to Buddhabrot Renderer
+
+In order to improve the cache performance, we will want to decrease the miss
+rate of the program, especially when dealing with the large array of the image 
+data.
+
+For the single thread case, we notice that the misses will occur when accessing
+the arrray of image data. To improve this, I suggest introducing an 
+intermediate array. This array will take a certain number of calculated z_ns
+from points that escape. Then, these z_ns will be sorted so that they are close
+together in memory based off the array of image data. This way, when we iterate
+through this intermediate array and increment the image data, there will be 
+much better spacial locality, ultimately resulting in better cache performance.
+This will have a space drawback and perhaps an overall time drawback but the 
+cache performance will be much better.
+
+For the multithreading case, we have a similiar improvements. We now partition
+the array of image data into sections such that each thread is devoted to one
+of the sections. This way, when a cache line is loaded from the section, there
+is no concern that there will be false sharing. At the end the portions will be
+put together to give the full image array data which should be simple as long
+as the sections are kept in a logical order. As far as I see, this does not 
+introduce new cacheing error.
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+Explicit Allocator Scenario:  Allocation Fails under First-Fit but not Best-Fit
+===============================================================================
+
+We start with a total heap size of 16 KB.
+
+Here is the order of allocations and frees:
+    
+    0. Begin withh heap size of 16 KB.
+    1. Allocate block of size 8 KB.
+    2. Allocate block of size 4 KB.
+    3. Free block from instruction 1.
+    4. Allocate block of size 2 KB.
+    5. Try to allocate block of size 8 KB -->>> results in Allocation Failure
+
+
+Here is the final state of the memory:
+
+Allocated Block of 2KB -> Free Block of 6KB -> Allocated Block of 4KB -> Free Block of 4 KB
+
+
+Here is the diagram of memory management from the instructions above where F represents 
+a free KB and A represents an allocated KB and | separates adjacent allocated blocks:
+
+[FFFFFFFFFFFFFFFF] -> [AAAAAAAAFFFFFFFF] -> [AAAAAAAA|AAAAFFFF] -> [FFFFFFFFAAAAFFFF] ->
+
+[AAFFFFFFAAAAFFFF] -> ALLOCATION FAILURE

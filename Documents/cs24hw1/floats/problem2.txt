@@ -1,0 +1,17 @@
+Part A:
+-------
+1. These results are different because associatvity is not preserved in floating point arithmetic i.e. the order in which you add numbers makes a difference. This is due to the rounding that occurs when adding. 
+
+2. The approach which adds in the increasing order of magnitude is most accurate. This is because when the smaller numbers are added first, the smaller values are preserved. If the large numbers are added first, adding small numbers rounds such that the small number has no effect on the total sum.
+For the same reason, adding in a random order might be better than adding in decreasing magnitude but will not be as good as adding in order of increasing magnitude.
+
+3. Imagine a data set that is essentially divided into two parts: some very very small numbers and then some very large numbers. In the set, the sum of all the small numbers isn't near the magnitude of the large numbers. Adding all the small ones first will be okay but then adding the large numbers will round the previous sum away, losing accuracy.
+
+
+
+Part B:
+-------
+I did the pairwise summation algorithm. This algorithm works to eliminate roundoff errors by recursively summing up pairs at a time. This way, the growing sum never gets too large such that adding a number with vastly different magnitude would throw off the rounding. The pairing allows each succesive pair to grow at a time producing an accurate sum.
+
+
+

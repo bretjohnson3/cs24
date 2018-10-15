@@ -1,0 +1,40 @@
+Set 5
+Problem 1
+
+Part a)
+
+We have a program on a 3 GHz processor so we have accesses of
+3 * 10 ^ 9 clocks per second.
+
+Our application is completing only 750 * 10^6 instructions / second.
+
+We access values from the cache in one clock and values in main memory in
+100 clocks.
+
+We represent our hit rate, y, which is a measure of how often we have accesses
+that hit the cash (these take one clock). We have a miss rate which is equal to
+1 - y.  Overall we have an access of x = y + (1 -y)*100 clocks / instruction
+
+From that we get the equation:
+
+750*10^6 instructions / sec = (3*10^9 clocks / sec) / (x clocks / instruction)
+
+We plug in x = y + (1 - y)*100 and solve the equation for y.
+
+We get y = 96/99 = 0.9696 (approx) meaning our miss rate is
+1 - y = 3 / 99 = 0.3030 (approx)
+
+
+Part b)
+
+We now want double the performance of instuctions per second.
+
+This makes our equation:
+
+1500*10^6 instructions / sec = (3*10^9 clocks / sec) / (x clocks / instruction)
+
+We solve and get that we need a hit rate of 98 / 99 = 0.9898 (approx)
+meaning a miss rate of 1 / 99 = 0.0101 (approx)
+
+Thus we need to improve our miss rate by a factor of 3 to double the
+performance.
